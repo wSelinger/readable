@@ -26,8 +26,8 @@ class CommentModal extends Component {
     return {
       editedComment: comment,
       timestamp: comment && comment.timestamp,
-      body: comment && comment.body,
-      author: comment && comment.body,
+      body: comment && (comment.body || ''),
+      author: comment && (comment.body || ''),
       }
   }
 

@@ -131,8 +131,8 @@ class PostDetails extends Component {
         {sorted(comments, byVoteScoreDesc).map((comment) => (
           <div key={comment.id} className="row">
             <span className="col-1">{new Date(comment.timestamp).toLocaleDateString()}</span>
-            <span className="col-1">{comment.author}</span>
-            <span className="col-6">{comment.body}</span>
+            <span className="col-1">{comment.author || '\u00a0'}</span>
+            <span className="col-6">{comment.body || '\u00a0'}</span>
             <span className="col-1 right">{comment.voteScore}</span>
             <div className="col-3 right">
               <button onClick={() => this.handleCommentVote(comment.id, true)}>Vote up</button>

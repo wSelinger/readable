@@ -30,9 +30,9 @@ class PostModal extends Component {
   computeState(post) {
     return {
       editedPost: post,
-      title: post && post.title,
-      body: post && post.body,
-      author: post && post.body,
+      title: post && (post.title || ''),
+      body: post && (post.body|| ''),
+      author: post && (post.author || ''),
       category: post && post.category,
       }
   }

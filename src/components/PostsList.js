@@ -118,17 +118,20 @@ const Posts = ({ posts, handlePostVote, handleDeletePost, handleEditPost }) => {
     <div className="table">
       {posts.length > 0 && (
       <div className="row">
-          <span className="col-4">Title</span>
+          <span className="col-3">Title</span>
+          <span className="col-1">Author</span>
           <span className="col-1">Posted</span>
           <span className="col-1">Category</span>
           <span className="col-1 right"># comments</span>
           <span className="col-1 right">Vote-Score</span>
       </div>
       )}
-      {posts.map(post => (
+      { // Note: Use || '\u00a0' to make React render the otherwise empty element
+        posts.map(post => (
         <div key={post.id} className="row">
           <Link to={`/${post.category}/${post.id}`} className="post-row-link">
-            <span className="col-4">{post.title}</span>
+            <span className="col-3">{post.title || '\u00a0'}</span>
+            <span className="col-1">{post.author || '\u00a0'}</span>
             <span className="col-1">{new Date(post.timestamp).toLocaleDateString()}</span>
             <span className="col-1">{post.category}</span>
             <span className="col-1 right">{post.commentCount}</span>

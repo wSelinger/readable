@@ -22,7 +22,7 @@ import {
 
 // post reducer
 
-function post(state = { categories: [] }, action) {
+function post(state = { categories: [], posts: [] }, action) {
   switch (action.type) {
 
     case SET_CATEGORIES:
@@ -57,28 +57,35 @@ function post(state = { categories: [] }, action) {
         posts: newPosts
       }
 
-      /*
-      Update commentCount in case of addition or deletion of comment.
-      A possible, simpler alternative is to re-read the post from the server
-      in this case.
-      */
-      case ADDED_COMMENT:
-        return updateCommentCount(state, action, 1)
+    /*
+    Update commentCount in case of setting or addition or deletion of comment.
+    Otherwise, adding or deleting new comments in another browser window
+    causes inconsistent comment count, since those comments are fetched,
+    but the post with updated comment count not.
+    A possible, simpler alternative is to read also the post from the server
+    in this case.
+    */
+    case ADDED_COMMENT:
+      return updateCommentCount(state, action.comment.parentId, 1)
 
-      case DELETED_COMMENT:
-        return updateCommentCount(state, action, -1)
+    case DELETED_COMMENT:
+      return updateCommentCount(state, action.comment.parentId, -1)
+
+    case SET_COMMENTS:
+      const { postId, comments } = action
+      return updateCommentCount(state, postId, null, comments.length)
 
     default:
       return state
   }
 }
 
-function updateCommentCount(state, action, deltaCount) {
-  const postId = action.comment.parentId
+// either update count by absolute value (if provided), or by increment
+function updateCommentCount(state, postId, increment, absoluteValue) {
   const newPosts = state.posts.map((post) => (
     post.id === postId ? {
       ...post,
-      commentCount: post.commentCount + deltaCount
+      commentCount: absoluteValue || ((post.commentCount || 0) + increment)
     } : post
   ))
   return {
